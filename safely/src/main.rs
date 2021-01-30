@@ -53,10 +53,12 @@ fn main() {
         Subcommand::Create {
             id: _,
             bundle_path: _,
-        } => unimplemented!(),
-        Subcommand::State { id: _ } => {
-            write_error("no such container");
-            std::process::exit(1);
+        } => libsafely::create(libsafely::config::Config::new("1.0.2")).unwrap(),
+        Subcommand::State { id } => {
+            if libsafely::state(&id).is_err() {
+                write_error("no such container");
+                std::process::exit(1);
+            }
         }
         Subcommand::Start { id: _ } => {
             write_error("no such container");
@@ -66,9 +68,11 @@ fn main() {
             write_error("no such container");
             std::process::exit(1);
         }
-        Subcommand::Delete { id: _ } => {
-            write_error("no such container");
-            std::process::exit(1);
+        Subcommand::Delete { id } => {
+            if libsafely::delete(&id).is_err() {
+                write_error("no such container");
+                std::process::exit(1);
+            }
         }
     }
 }
