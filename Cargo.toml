@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "safely",
+    "libsafely",
+    "specsafely",
+]

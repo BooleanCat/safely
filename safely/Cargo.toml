@@ -1,0 +1,8 @@
+[package]
+name = "safely"
+version = "0.1.0"
+authors = ["BooleanCat <tomgodkin@pm.me>"]
+edition = "2018"
+
+[dependencies]
+structopt = { version = "0.3" }

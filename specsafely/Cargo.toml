@@ -1,0 +1,7 @@
+[package]
+name = "specsafely"
+version = "0.1.0"
+authors = ["BooleanCat <tomgodkin@pm.me>"]
+edition = "2018"
+
+[dependencies]
