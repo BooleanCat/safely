@@ -1,5 +1,7 @@
+use std::io::Write;
 use std::path::PathBuf;
 use structopt::StructOpt;
+use termcolor::WriteColor;
 
 #[derive(Debug, StructOpt)]
 struct Opt {
@@ -52,9 +54,33 @@ fn main() {
             id: _,
             bundle_path: _,
         } => unimplemented!(),
-        Subcommand::State { id: _ } => unimplemented!(),
-        Subcommand::Start { id: _ } => unimplemented!(),
-        Subcommand::Kill { id: _, signal: _ } => unimplemented!(),
-        Subcommand::Delete { id: _ } => unimplemented!(),
+        Subcommand::State { id: _ } => {
+            write_error("no such container");
+            std::process::exit(1);
+        }
+        Subcommand::Start { id: _ } => {
+            write_error("no such container");
+            std::process::exit(1);
+        }
+        Subcommand::Kill { id: _, signal: _ } => {
+            write_error("no such container");
+            std::process::exit(1);
+        }
+        Subcommand::Delete { id: _ } => {
+            write_error("no such container");
+            std::process::exit(1);
+        }
     }
+}
+
+fn write_error(message: &str) {
+    let mut stderr = termcolor::StandardStream::stderr(termcolor::ColorChoice::Auto);
+    stderr
+        .set_color(termcolor::ColorSpec::new().set_fg(Some(termcolor::Color::Red)))
+        .unwrap();
+    write!(&mut stderr, "error: ").unwrap();
+
+    stderr.set_color(&termcolor::ColorSpec::new()).unwrap();
+
+    eprintln!("{}", message);
 }
