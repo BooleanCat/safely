@@ -55,7 +55,7 @@ mod tests {
         let config: Config = toml::from_str(r#"root = '/foo/bar'"#).unwrap();
         let config_path = PathBuf::from(work_dir.path()).join("safely.toml");
 
-        std::fs::write(&config_path, toml::to_vec(&config).unwrap()).unwrap();
+        fs::write(&config_path, toml::to_vec(&config).unwrap()).unwrap();
 
         let got = Config::from_file(&config_path).unwrap();
 
@@ -66,7 +66,7 @@ mod tests {
     fn config_from_file_reads_values_with_defaults() {
         let workdir = tempfile::tempdir().unwrap();
 
-        std::fs::write(workdir.path().join("safely.toml"), "").unwrap();
+        fs::write(workdir.path().join("safely.toml"), "").unwrap();
 
         let got = Config::from_file(workdir.path().join("safely.toml")).unwrap();
         let want: Config = toml::from_str(r#"root = '/run/safely'"#).unwrap();
@@ -100,7 +100,7 @@ mod tests {
 
         let config: Config = toml::from_str(r#"root = '/foo/bar'"#).unwrap();
 
-        std::fs::write(
+        fs::write(
             &config_dir.join("safely.toml"),
             toml::to_vec(&config).unwrap(),
         )
