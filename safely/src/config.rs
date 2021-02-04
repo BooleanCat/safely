@@ -3,15 +3,23 @@ use std::path::{Path, PathBuf};
 use std::{env, fs, io};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[serde(default)]
 pub struct Config {
-    #[serde(default = "Config::default_root")]
     root: PathBuf,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            root: PathBuf::from("/").join("run").join("safely"),
+        }
+    }
 }
 
 impl Config {
     pub fn load() -> Result<Self, libsafely::Error> {
         match env::var("HOME") {
-            Err(_) => Ok(toml::from_str("").unwrap()),
+            Err(_) => Ok(Default::default()),
             Ok(home) => match fs::read_to_string(
                 Path::new(&home)
                     .join(".config")
@@ -22,9 +30,7 @@ impl Config {
                     Ok(config) => Ok(config),
                     Err(error) => Err(libsafely::Error::from(error)),
                 },
-                Err(error) if error.kind() == io::ErrorKind::NotFound => {
-                    Ok(toml::from_str("").unwrap())
-                }
+                Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(Default::default()),
                 Err(error) => Err(libsafely::Error::from(error)),
             },
         }
@@ -32,10 +38,6 @@ impl Config {
 
     pub fn from_file<P: AsRef<Path>>(p: P) -> Result<Self, libsafely::Error> {
         toml::from_str(&fs::read_to_string(p)?).map_err(From::from)
-    }
-
-    fn default_root() -> PathBuf {
-        PathBuf::from("/").join("run").join("safely")
     }
 }
 
