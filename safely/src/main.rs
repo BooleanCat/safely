@@ -3,8 +3,13 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 use termcolor::WriteColor;
 
+mod config;
+
 #[derive(Debug, StructOpt)]
 struct Opt {
+    #[structopt(short, long, parse(from_os_str))]
+    config: Option<PathBuf>,
+
     #[structopt(subcommand)]
     command: Subcommand,
 }
@@ -49,7 +54,18 @@ enum Subcommand {
 }
 
 fn main() {
-    match Opt::from_args().command {
+    let opt = Opt::from_args();
+
+    let _ = match opt.config {
+        None => config::Config::load(),
+        Some(path) => config::Config::from_file(path),
+    }
+    .unwrap_or_else(|error| {
+        write_error(&format!("failed to load safely config: {:?}", error));
+        std::process::exit(1);
+    });
+
+    match opt.command {
         Subcommand::Create {
             id: _,
             bundle_path: _,
