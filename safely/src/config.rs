@@ -18,14 +18,9 @@ impl Default for Config {
 
 impl Config {
     pub fn load() -> Result<Self, libsafely::Error> {
-        match env::var("HOME") {
+        match Self::home_config() {
             Err(_) => Ok(Default::default()),
-            Ok(home) => match fs::read_to_string(
-                Path::new(&home)
-                    .join(".config")
-                    .join("safely")
-                    .join("safely.toml"),
-            ) {
+            Ok(home) => match fs::read_to_string(&home) {
                 Ok(content) => match toml::from_str(&content) {
                     Ok(config) => Ok(config),
                     Err(error) => Err(libsafely::Error::from(error)),
@@ -38,6 +33,16 @@ impl Config {
 
     pub fn from_file<P: AsRef<Path>>(p: P) -> Result<Self, libsafely::Error> {
         toml::from_str(&fs::read_to_string(p)?).map_err(From::from)
+    }
+
+    fn home_config() -> Result<PathBuf, env::VarError> {
+        match env::var("HOME") {
+            Err(error) => Err(error),
+            Ok(path) => Ok(PathBuf::from(&path)
+                .join(".config")
+                .join("safely")
+                .join("safely.toml")),
+        }
     }
 }
 
