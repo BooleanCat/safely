@@ -1,6 +1,19 @@
 use serde::{Deserialize, Serialize};
+use snafu::{ResultExt, Snafu};
 use std::path::{Path, PathBuf};
 use std::{env, fs, io};
+
+#[derive(Debug, Snafu)]
+pub enum Error {
+    #[snafu(display("Could not read file {}: {}", filename.display(), source))]
+    ReadFile {
+        filename: std::path::PathBuf,
+        source: std::io::Error,
+    },
+
+    #[snafu(display("Could not parse as TOML: {}", source))]
+    ParseTOML { source: toml::de::Error },
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
@@ -17,22 +30,25 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn load() -> Result<Self, libsafely::Error> {
+    pub fn load() -> Result<Self, Error> {
         match Self::home_config() {
             Err(_) => Ok(Default::default()),
-            Ok(home) => match fs::read_to_string(&home) {
-                Ok(content) => match toml::from_str(&content) {
-                    Ok(config) => Ok(config),
-                    Err(error) => Err(libsafely::Error::from(error)),
-                },
-                Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(Default::default()),
-                Err(error) => Err(libsafely::Error::from(error)),
+            Ok(home) => match fs::read_to_string(&home).context(ReadFile { filename: home }) {
+                Ok(content) => toml::from_str(&content).context(ParseTOML),
+                Err(Error::ReadFile {
+                    filename: _,
+                    source,
+                }) if source.kind() == io::ErrorKind::NotFound => Ok(Default::default()),
+                Err(error) => Err(error),
             },
         }
     }
 
-    pub fn from_file<P: AsRef<Path>>(p: P) -> Result<Self, libsafely::Error> {
-        toml::from_str(&fs::read_to_string(p)?).map_err(From::from)
+    pub fn from_file<P: AsRef<Path>>(p: P) -> Result<Self, Error> {
+        toml::from_str(&fs::read_to_string(p.as_ref()).context(ReadFile {
+            filename: p.as_ref(),
+        })?)
+        .context(ParseTOML {})
     }
 
     fn home_config() -> Result<PathBuf, env::VarError> {
