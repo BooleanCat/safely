@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[serde(rename_all = "camelCase")]
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct IntelRDT {
+pub struct IntelRdt {
     #[serde(rename = "closID", skip_serializing_if = "Option::is_none")]
     pub clos_id: Option<String>,
 
@@ -13,7 +13,7 @@ pub struct IntelRDT {
     pub mem_bw_schema: Option<String>,
 }
 
-impl IntelRDT {
+impl IntelRdt {
     pub fn new() -> Self {
         Default::default()
     }
@@ -21,14 +21,14 @@ impl IntelRDT {
 
 #[cfg(test)]
 mod tests {
-    use super::IntelRDT;
+    use super::IntelRdt;
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(IntelRDT::new()).unwrap();
+        let got = serde_json::to_value(IntelRdt::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -41,7 +41,7 @@ mod tests {
             "memBwSchema": "MB:0=20;1=70"
         });
 
-        let got = serde_json::to_value(IntelRDT {
+        let got = serde_json::to_value(IntelRdt {
             clos_id: Some(String::from("guaranteed_group")),
             l3_cache_schema: Some(String::from("L3:0=7f0;1=1f")),
             mem_bw_schema: Some(String::from("MB:0=20;1=70")),

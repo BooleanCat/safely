@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct CPU {
+pub struct Cpu {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub count: Option<u64>,
 
@@ -12,7 +12,7 @@ pub struct CPU {
     pub maximum: Option<u16>,
 }
 
-impl CPU {
+impl Cpu {
     pub fn new() -> Self {
         Default::default()
     }
@@ -20,14 +20,14 @@ impl CPU {
 
 #[cfg(test)]
 mod tests {
-    use super::CPU;
+    use super::Cpu;
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(CPU::new()).unwrap();
+        let got = serde_json::to_value(Cpu::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -40,7 +40,7 @@ mod tests {
             "maximum": 5000
         });
 
-        let got = serde_json::to_value(CPU {
+        let got = serde_json::to_value(Cpu {
             count: Some(2),
             shares: Some(1024),
             maximum: Some(5000),

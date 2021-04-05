@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct IDMapping {
+pub struct IdMapping {
     #[serde(rename = "containerID")]
     pub container_id: u32,
 
@@ -11,7 +11,7 @@ pub struct IDMapping {
     pub size: u32,
 }
 
-impl IDMapping {
+impl IdMapping {
     pub fn new(container_id: u32, host_id: u32, size: u32) -> Self {
         Self {
             container_id,
@@ -23,7 +23,7 @@ impl IDMapping {
 
 #[cfg(test)]
 mod tests {
-    use super::IDMapping;
+    use super::IdMapping;
     use serde_json;
 
     #[test]
@@ -34,7 +34,7 @@ mod tests {
             "size": 100
         });
 
-        let got = serde_json::to_value(IDMapping::new(0, 2000, 100)).unwrap();
+        let got = serde_json::to_value(IdMapping::new(0, 2000, 100)).unwrap();
 
         assert_eq!(want, got);
     }

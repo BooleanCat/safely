@@ -12,7 +12,7 @@ pub enum Error {
     },
 
     #[snafu(display("Could not parse as TOML: {}", source))]
-    ParseTOML { source: toml::de::Error },
+    ParseToml { source: toml::de::Error },
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -34,7 +34,7 @@ impl Config {
         match Self::home_config() {
             Err(_) => Ok(Default::default()),
             Ok(home) => match fs::read_to_string(&home).context(ReadFile { filename: home }) {
-                Ok(content) => toml::from_str(&content).context(ParseTOML),
+                Ok(content) => toml::from_str(&content).context(ParseToml),
                 Err(Error::ReadFile {
                     filename: _,
                     source,
@@ -48,7 +48,7 @@ impl Config {
         toml::from_str(&fs::read_to_string(p.as_ref()).context(ReadFile {
             filename: p.as_ref(),
         })?)
-        .context(ParseTOML {})
+        .context(ParseToml {})
     }
 
     fn home_config() -> Result<PathBuf, env::VarError> {

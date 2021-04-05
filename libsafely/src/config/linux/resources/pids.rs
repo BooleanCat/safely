@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PIDs {
+pub struct Pids {
     pub limit: i64,
 }
 
-impl PIDs {
+impl Pids {
     pub fn new(limit: i64) -> Self {
         Self { limit }
     }
@@ -13,7 +13,7 @@ impl PIDs {
 
 #[cfg(test)]
 mod tests {
-    use super::PIDs;
+    use super::Pids;
     use serde_json;
 
     #[test]
@@ -22,7 +22,7 @@ mod tests {
             "limit": 500
         });
 
-        let got = serde_json::to_value(PIDs::new(500)).unwrap();
+        let got = serde_json::to_value(Pids::new(500)).unwrap();
 
         assert_eq!(want, got);
     }

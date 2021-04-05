@@ -54,7 +54,7 @@ pub struct Config {
     pub solaris: Option<solaris::Solaris>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub vm: Option<vm::VM>,
+    pub vm: Option<vm::Vm>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hooks: Option<Hooks>,
@@ -85,7 +85,7 @@ impl Config {
 #[cfg(test)]
 mod tests {
     use super::{
-        linux::Linux, solaris::Solaris, vm::Kernel, vm::VM, windows::Windows, Config, Hooks, Mount,
+        linux::Linux, solaris::Solaris, vm::Kernel, vm::Vm, windows::Windows, Config, Hooks, Mount,
         Process, Root, User,
     };
     use serde_json;
@@ -149,7 +149,7 @@ mod tests {
             linux: Some(Linux::new()),
             windows: Some(Windows::new()),
             solaris: Some(Solaris::new()),
-            vm: Some(VM::new(Kernel::new("/path/to/vmlinuz"))),
+            vm: Some(Vm::new(Kernel::new("/path/to/vmlinuz"))),
             hooks: Some(Hooks::new()),
             annotations: Some(annotations),
             ..Config::new("0.1.0")

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[serde(rename_all = "camelCase")]
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct BlockIO {
+pub struct BlockIo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<u16>,
 
@@ -32,7 +32,7 @@ pub struct BlockIO {
     pub throttle_write_iops_device: Option<Vec<ThrottleDevice>>,
 }
 
-impl BlockIO {
+impl BlockIo {
     pub fn new() -> Self {
         Default::default()
     }
@@ -40,14 +40,14 @@ impl BlockIO {
 
 #[cfg(test)]
 mod tests {
-    use super::{BlockIO, ThrottleDevice, WeightDevice};
+    use super::{BlockIo, ThrottleDevice, WeightDevice};
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(BlockIO::new()).unwrap();
+        let got = serde_json::to_value(BlockIo::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -93,7 +93,7 @@ mod tests {
             ]
         });
 
-        let got = serde_json::to_value(BlockIO {
+        let got = serde_json::to_value(BlockIo {
             weight: Some(50),
             leaf_weight: Some(100),
             weight_device: Some(vec![WeightDevice::new(10, 229)]),

@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct CappedCPU {
+pub struct CappedCpu {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ncpus: Option<String>,
 }
 
-impl CappedCPU {
+impl CappedCpu {
     pub fn new() -> Self {
         Default::default()
     }
@@ -14,14 +14,14 @@ impl CappedCPU {
 
 #[cfg(test)]
 mod tests {
-    use super::CappedCPU;
+    use super::CappedCpu;
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(CappedCPU::new()).unwrap();
+        let got = serde_json::to_value(CappedCpu::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -32,7 +32,7 @@ mod tests {
             "ncpus": "8"
         });
 
-        let got = serde_json::to_value(CappedCPU {
+        let got = serde_json::to_value(CappedCpu {
             ncpus: Some(String::from("8")),
         })
         .unwrap();

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[serde(rename_all = "camelCase")]
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct CPU {
+pub struct Cpu {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub shares: Option<u64>,
 
@@ -25,7 +25,7 @@ pub struct CPU {
     mems: Option<String>,
 }
 
-impl CPU {
+impl Cpu {
     pub fn new() -> Self {
         Default::default()
     }
@@ -33,14 +33,14 @@ impl CPU {
 
 #[cfg(test)]
 mod tests {
-    use super::CPU;
+    use super::Cpu;
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(CPU::new()).unwrap();
+        let got = serde_json::to_value(Cpu::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -57,7 +57,7 @@ mod tests {
             "mems": "0-7"
         });
 
-        let got = serde_json::to_value(CPU {
+        let got = serde_json::to_value(Cpu {
             shares: Some(1024),
             quota: Some(1000000),
             period: Some(500000),

@@ -9,9 +9,9 @@ mod syscall;
 mod syscall_arg;
 
 pub use self::device::Device;
-pub use self::id_mapping::IDMapping;
+pub use self::id_mapping::IdMapping;
 pub use self::namespace::Namespace;
-pub use intel_rdt::IntelRDT;
+pub use intel_rdt::IntelRdt;
 pub use personality::Personality;
 pub use seccomp::Seccomp;
 pub use syscall::Syscall;
@@ -27,10 +27,10 @@ pub struct Linux {
     pub namespaces: Option<Vec<Namespace>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub uid_mappings: Option<Vec<IDMapping>>,
+    pub uid_mappings: Option<Vec<IdMapping>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub gid_mappings: Option<Vec<IDMapping>>,
+    pub gid_mappings: Option<Vec<IdMapping>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub devices: Option<Vec<Device>>,
@@ -45,7 +45,7 @@ pub struct Linux {
     pub unified: Option<HashMap<String, String>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub intel_rdt: Option<IntelRDT>,
+    pub intel_rdt: Option<IntelRdt>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sysctl: Option<HashMap<String, String>>,
@@ -77,7 +77,7 @@ impl Linux {
 
 #[cfg(test)]
 mod tests {
-    use super::{resources, Device, IDMapping, IntelRDT, Linux, Namespace, Personality, Seccomp};
+    use super::{resources, Device, IdMapping, IntelRdt, Linux, Namespace, Personality, Seccomp};
     use serde_json;
     use std::collections::HashMap;
 
@@ -153,13 +153,13 @@ mod tests {
 
         let got = serde_json::to_value(Linux {
             namespaces: Some(vec![Namespace::new("pid")]),
-            uid_mappings: Some(vec![IDMapping::new(0, 2000, 100)]),
-            gid_mappings: Some(vec![IDMapping::new(0, 3000, 200)]),
+            uid_mappings: Some(vec![IdMapping::new(0, 2000, 100)]),
+            gid_mappings: Some(vec![IdMapping::new(0, 3000, 200)]),
             devices: Some(vec![Device::new("c", "/dev/fuse", 10, 229)]),
             cgroups_path: Some(String::from("/cgroups")),
             resources: Some(resources::Resources::new()),
             unified: Some(unified),
-            intel_rdt: Some(IntelRDT::new()),
+            intel_rdt: Some(IntelRdt::new()),
             sysctl: Some(sysctl),
             seccomp: Some(Seccomp::new("SCMP_ACT_ALLOW")),
             rootfs_propagation: Some(String::from("shared")),

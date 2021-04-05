@@ -3,7 +3,7 @@ mod capped_cpu;
 mod capped_memory;
 
 pub use anet::ANet;
-pub use capped_cpu::CappedCPU;
+pub use capped_cpu::CappedCpu;
 pub use capped_memory::CappedMemory;
 use serde::{Deserialize, Serialize};
 
@@ -20,7 +20,7 @@ pub struct Solaris {
     pub max_shm_memory: Option<String>,
 
     #[serde(rename = "cappedCPU", skip_serializing_if = "Option::is_none")]
-    pub capped_cpu: Option<CappedCPU>,
+    pub capped_cpu: Option<CappedCpu>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub capped_memory: Option<CappedMemory>,
@@ -37,7 +37,7 @@ impl Solaris {
 
 #[cfg(test)]
 mod tests {
-    use super::{ANet, CappedCPU, CappedMemory, Solaris};
+    use super::{ANet, CappedCpu, CappedMemory, Solaris};
     use serde_json;
 
     #[test]
@@ -66,7 +66,7 @@ mod tests {
             milestone: Some(String::from("svc:/milestone/container:default")),
             limitpriv: Some(String::from("default")),
             max_shm_memory: Some(String::from("512m")),
-            capped_cpu: Some(CappedCPU::new()),
+            capped_cpu: Some(CappedCpu::new()),
             capped_memory: Some(CappedMemory::new()),
             anet: Some(vec![ANet::new()]),
         })

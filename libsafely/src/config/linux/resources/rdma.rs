@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[serde(rename_all = "camelCase")]
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct RDMA {
+pub struct Rdma {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hca_handles: Option<u32>,
 
@@ -10,7 +10,7 @@ pub struct RDMA {
     pub hca_objects: Option<u32>,
 }
 
-impl RDMA {
+impl Rdma {
     pub fn new() -> Self {
         Default::default()
     }
@@ -18,14 +18,14 @@ impl RDMA {
 
 #[cfg(test)]
 mod tests {
-    use super::RDMA;
+    use super::Rdma;
     use serde_json;
 
     #[test]
     fn serialize() {
         let want = serde_json::json!({});
 
-        let got = serde_json::to_value(RDMA::new()).unwrap();
+        let got = serde_json::to_value(Rdma::new()).unwrap();
 
         assert_eq!(want, got);
     }
@@ -37,7 +37,7 @@ mod tests {
             "hcaObjects": 10000
         });
 
-        let got = serde_json::to_value(RDMA {
+        let got = serde_json::to_value(Rdma {
             hca_handles: Some(3),
             hca_objects: Some(10000),
         })

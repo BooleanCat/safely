@@ -2,7 +2,7 @@ mod cpu;
 mod memory;
 mod storage;
 
-pub use cpu::CPU;
+pub use cpu::Cpu;
 pub use memory::Memory;
 use serde::{Deserialize, Serialize};
 pub use storage::Storage;
@@ -13,7 +13,7 @@ pub struct Resources {
     memory: Option<Memory>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    cpu: Option<CPU>,
+    cpu: Option<Cpu>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     storage: Option<Storage>,
@@ -27,7 +27,7 @@ impl Resources {
 
 #[cfg(test)]
 mod tests {
-    use super::{Memory, Resources, Storage, CPU};
+    use super::{Cpu, Memory, Resources, Storage};
     use serde_json;
 
     #[test]
@@ -49,7 +49,7 @@ mod tests {
 
         let got = serde_json::to_value(Resources {
             memory: Some(Memory::new()),
-            cpu: Some(CPU::new()),
+            cpu: Some(Cpu::new()),
             storage: Some(Storage::new()),
         })
         .unwrap();
